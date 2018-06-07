@@ -1,6 +1,9 @@
 {
 	"version": "2017-07-05",
-	"clientid": "s0001",
+	"clientid": [
+	 {"id1": 1},
+	 {"id2": 2}
+	 ],
 	"statement": {
 		"publisher": "raspberry pi",
 		"publishstatus": false,

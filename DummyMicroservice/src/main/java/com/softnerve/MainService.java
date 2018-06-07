@@ -6,8 +6,11 @@ import java.util.*;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,20 +22,38 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MainService {
 	private String file_path = "intern.json";
 	private ObjectMapper mapper = new ObjectMapper();
+	
 	@RequestMapping("/")
-	public Intern getIntern(){
-		File json = new File(file_path);
-		Intern intern = new Intern("DefaulName", 1, 1);
-		
-		 try{
-	         intern = mapper.readValue(json, Intern.class);
-	      }
-	      catch (JsonParseException e) { e.printStackTrace();}
-	      catch (JsonMappingException e) { e.printStackTrace(); }
-	      catch (IOException e) { e.printStackTrace(); }
-		 
-		 return intern;		
-	}
+	public JsonNode getIntern(){
+	    ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode desired = null;
+        JsonNode delta = null;
+        JsonNode shadow = null;
+        try {
+            desired = objectMapper.readTree(new File("intern.json")); // Change
+                                                                      // default
+                                                                      // location
+                                                                      // of file
+                                                                      // to
+                                                                      // classpath
+                                                                      // folder
+            delta = objectMapper.readTree(new File("intern.json"));
+            shadow = objectMapper.readTree("{ }");
+            
+            ((ObjectNode) shadow).set("desired", desired);
+            ((ObjectNode) shadow).set("delta", delta);
+            
+            File delte = new File ("intern.json");
+            delte.delete();
+            
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return shadow;
+        
+    }		
+	
 	
 	@RequestMapping("/set")
     public String setIntern(@RequestParam Map<String,String> requestParams) {

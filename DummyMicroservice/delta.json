@@ -1,1 +1,5 @@
-{"statement":{"publishstatus":false,"subscribestatus":false}}
+{
+  "clientid" : [ {
+    "id1" : 1
+  } ]
+}
